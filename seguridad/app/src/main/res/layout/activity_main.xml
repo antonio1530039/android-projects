@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity"
+    android:background="#D5F5E3">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="SEGURIDAD"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="50dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:text="¿Con que nivel de seguridad quieres proteger (cifrar) tus mensajes?"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="#6e6e6e"
+            android:textSize="15dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/btn_baja"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:text="Aceptable"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:background="#b60000"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="#D5F5E3"/>
+            <Button
+                android:id="@+id/btn_media"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:text="Alta"
+                android:textStyle="bold"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textSize="20dp"
+                android:background="#c1b700"
+
+                android:layout_marginBottom="20dp"
+                android:textColor="#D5F5E3"
+                />
+            <Button
+                android:id="@+id/btn_alta"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:text="Muy alta"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textStyle="bold"
+                android:textSize="20dp"
+
+                android:layout_marginBottom="20dp"
+                android:background="#06af00"
+                android:textColor="#D5F5E3"
+
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
