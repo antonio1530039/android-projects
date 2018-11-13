@@ -26,7 +26,6 @@ public class Cartera extends MinerNode implements Serializable{
 
     public Cartera() {
         super();
-        db = new dbConnect();
         this.transaccionesRealizadas = 0;
     }
 

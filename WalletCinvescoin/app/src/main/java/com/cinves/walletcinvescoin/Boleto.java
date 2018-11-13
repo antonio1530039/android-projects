@@ -23,17 +23,16 @@ import java.util.Date;
  *
  * @author cti
  */
-public class Boleto extends dbConnect implements Serializable {
+public class Boleto implements Serializable {
     
-    private String folio;
-    private String periodo;
-    private String ruta;
+    public String folio;
+    public String periodo;
+    public String ruta;
     public double precio;
     public PublicKey vendedor;
     public String fechaCompra;
-    
+    public byte[] vendedorRaw;
     public Boleto(String periodo, String ruta, double precio, PublicKey vendedor){
-        super();
         this.periodo = periodo;
         this.ruta = ruta;
         this.precio = precio;
@@ -48,7 +47,6 @@ public class Boleto extends dbConnect implements Serializable {
     }
     
     public Boleto(){
-        super();
     }
     
     public String obtenerFolio(){
@@ -56,7 +54,7 @@ public class Boleto extends dbConnect implements Serializable {
         return h.getHexValue((this.periodo+ this.ruta + Double.toString(precio) + this.vendedor.getEncoded().toString() + this.fechaCompra).toString());
     }
 
-     @Override
+    /* @Override
     public boolean insert() {
         String sql = "INSERT INTO boleto(folio, periodo, ruta, precio, vendedor, fechaCompra) VALUES(?,?,?,?,?,?)";
         //Serializacion de objeto PublicKey
@@ -80,9 +78,9 @@ public class Boleto extends dbConnect implements Serializable {
         } catch (IOException ex) {
            return false;
         }
-    }
+    }*/
 
-    @Override
+    //@Override
     public PublicKey deserializeObject(byte[] path) {
         PublicKey e = null;
       try {

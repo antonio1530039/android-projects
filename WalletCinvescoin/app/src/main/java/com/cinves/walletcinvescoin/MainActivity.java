@@ -10,6 +10,16 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.security.KeyPair;
+import java.security.Security;
+import java.util.ArrayList;
+
+import amp_new.Security.DigitalSignature;
+
 public class MainActivity extends Activity {
 
     ImageButton iniciar;
@@ -24,11 +34,40 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         iniciar = (ImageButton) findViewById(R.id.btn_iniciar);
         askPermissionOnly();
 
-        dbConnect db = new dbConnect();
+        dbConnect db = new dbConnect(this);
+
+
+
+        DigitalSignature ds = new DigitalSignature();
+
+        KeyPair kp;
+
+        kp = ds.generateKeyPair();
+
+        byte[] objectSerialized = new byte[0];
+
+
+        try {
+            objectSerialized = this.serializeObjectForStorage(kp);
+        } catch (IOException e) {
+            Toast.makeText(getApplicationContext(), "Exception in serialized object", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+        if(db.insertNode("user","password", objectSerialized))
+            Toast.makeText(getApplicationContext(), "Node inserted!", Toast.LENGTH_SHORT).show();
+
+
+        Toast.makeText(getApplicationContext(), "Number of rows in Node: " + db.numberOfRows("node"), Toast.LENGTH_SHORT).show();
+
+        ArrayList<Carterita> arr = db.getAllNodes();
+        Toast.makeText(getApplicationContext(), "Number GET ALL NODES: " + arr.size(), Toast.LENGTH_SHORT).show();
+
+        for(int i=0; i<arr.size(); i++ )
+            Toast.makeText(getApplicationContext(), "USER: " + arr.get(i).user, Toast.LENGTH_SHORT).show();
 
         iniciar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +88,24 @@ public class MainActivity extends Activity {
             }
         });
 
+    }
+
+    public byte[] serializeObjectForStorage(Object o) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutput out = null;
+        try {
+            out = new ObjectOutputStream(bos);
+            out.writeObject(o);
+            out.flush();
+            return bos.toByteArray();
+        } finally {
+            try {
+                bos.close();
+            } catch (IOException ex) {
+                System.out.println("Exception in: trying to serialize obejct");
+                return null;
+            }
+        }
     }
 
 
