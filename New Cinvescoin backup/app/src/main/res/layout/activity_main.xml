@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Cinvescoin\nWallet"
+                android:textSize="40dp"
+                android:textAlignment="center"
+                android:background="#455A64"
+                android:textColor="#FFFFFF"
+                android:gravity="center"/>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:text="Ingrese sus datos para iniciar sesión"
+            android:textColor="#212121"
+            android:gravity="center"/>
+
+        <EditText
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/user_et"
+            android:inputType="text"
+            android:gravity="center"
+            android:hint="User"/>
+
+
+        <EditText
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/pin_et"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:gravity="center"
+            android:hint="PIN"/>
+
+
+        <ImageButton
+            android:id="@+id/btn_iniciar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:scaleType="fitCenter"
+            android:layout_weight="0.2"
+            android:src="@drawable/login"
+            android:background="#FFFFFF"
+            android:layout_gravity="center_horizontal"
+            />
+
+
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

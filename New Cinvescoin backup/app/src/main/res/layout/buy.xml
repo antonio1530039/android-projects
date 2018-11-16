@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Comprar boleto"
+                android:textSize="40dp"
+                android:textAlignment="center"
+                android:background="#455A64"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="20dp"/>
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Seleccione el boleto:"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:textColor="#212121"
+
+/>
+            <Spinner
+
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_height="0dp"
+                android:layout_weight="0.02"
+                android:layout_width="match_parent"
+                android:id="@+id/boleto_spinner"
+                android:background="#CFD8DC"
+
+                />
+
+            <TextView
+
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vendedor:"
+                android:textSize="30dp"
+                android:textColor="#212121"
+                android:textStyle="bold"/>
+
+            <EditText
+
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.04"
+                android:hint="Address"
+                android:gravity="center"
+                android:id="@+id/vendedor_address_et"
+                android:enabled="false"/>
+
+            <TextView
+
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Precio:"
+                android:textSize="30dp"
+                android:textColor="#212121"
+                android:textStyle="bold"/>
+
+            <EditText
+
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.02"
+                android:hint="Precio"
+                android:enabled="false"
+                android:gravity="center"
+                android:id="@+id/precio_et"/>
+
+
+        </LinearLayout>
+
+
+
+
+
+
+
+
+
+        <!-- Para transferencia -->
+        <!--TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dirección:"
+                android:textSize="30dp"
+                android:textColor="#212121"
+                android:textStyle="bold"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Address"
+                android:id="@+id/vendedor_address_et"/>
+            <ImageButton
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_weight="0."
+                android:scaleType="fitCenter"
+                android:src="@drawable/copy"
+                android:background="#FFFFFF"
+                android:id="@+id/paste_btn"
+                android:layout_gravity="center_horizontal"
+                />
+
+        </LinearLayout-->
+
+
+
+
+
+
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                android:src="@drawable/back"
+                android:background="#FFFFFF"
+                android:id="@+id/backBuy"
+                android:layout_gravity="center_horizontal"
+                />
+
+            <ImageButton
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                android:src="@drawable/confirm"
+                android:background="#FFFFFF"
+                android:id="@+id/comprar"
+                android:layout_gravity="center_horizontal"
+                />
+
+
+
+        </LinearLayout>
+
+
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
