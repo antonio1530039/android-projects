@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.security.KeyPair;
 
 import amp_new.AppInterface.API;
+import amp_new.Security.Hash;
 import amp_new.Tools.Utilities;
 
 public class Segunda extends Activity {
@@ -60,6 +61,8 @@ public class Segunda extends Activity {
 
 
         final byte[] rawKp = i.getByteArrayExtra("keypair");
+
+        final String pin = i.getStringExtra("pin");
         //Deserializacion de par de llaves
         KeyPair kp = db.deserializeKeyPair(rawKp);
         //Asignar dirección pública al cuadro de texto
@@ -95,6 +98,7 @@ public class Segunda extends Activity {
             public void onClick(View v) {
                 Intent newActivity = new Intent(Segunda.this, Historial.class);
                 newActivity.putExtra("keypair",rawKp);
+                newActivity.putExtra("pin", pin);
                 startActivity(newActivity);
             }
         });
@@ -104,6 +108,7 @@ public class Segunda extends Activity {
             public void onClick(View v) {
                 Intent newActivity = new Intent(Segunda.this, Buy.class);
                 newActivity.putExtra("keypair",rawKp);
+                newActivity.putExtra("pin", pin);
                 startActivity(newActivity);
             }
         });
@@ -113,6 +118,7 @@ public class Segunda extends Activity {
             public void onClick(View v) {
                 Intent newActivity = new Intent(Segunda.this, Transferencia.class);
                 newActivity.putExtra("keypair",rawKp);
+                newActivity.putExtra("pin", pin);
                 startActivity(newActivity);
             }
         });

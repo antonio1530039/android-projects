@@ -61,7 +61,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:id="@+id/pin_et"
-            android:inputType="number"
+            android:inputType="numberPassword"
             android:digits="0123456789"
             android:gravity="center"
             android:hint="PIN"/>

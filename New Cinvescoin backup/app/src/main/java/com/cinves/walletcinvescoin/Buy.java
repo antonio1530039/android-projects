@@ -1,14 +1,18 @@
 package com.cinves.walletcinvescoin;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.ContactsContract;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,6 +31,7 @@ import java.security.KeyPair;
 import java.security.PublicKey;
 import java.util.ArrayList;
 
+import amp_new.Security.Hash;
 import amp_new.Tools.Utilities;
 
 public class Buy extends Activity {
@@ -65,6 +70,7 @@ public class Buy extends Activity {
 
 
         final byte[] rawKp = i.getByteArrayExtra("keypair");
+        final String pin = i.getStringExtra("pin");
         //Deserializacion de par de llaves
         final KeyPair kp = db.deserializeKeyPair(rawKp);
 
@@ -115,13 +121,55 @@ public class Buy extends Activity {
             @Override
             public void onClick(View v) {
                 if(!vendedor.getText().toString().equals("")){
-                    Toast.makeText(getApplicationContext(), "Espere...", Toast.LENGTH_SHORT).show();
-                    Transaccion t = cartera.comprarBoleto(a.get( boletos.getSelectedItemPosition() ));
-                    if(t!=null){
-                        api.makeTransaction(t, cartera);
-                    }
-                    else
-                        Toast.makeText(CX, "No puedes realizarte una transacción a ti mismo", Toast.LENGTH_SHORT).show();
+
+                    final Dialog d3 = new Dialog(CX);
+                    //Se asigna al layout el archivo xml que contiene el formulario para agregar una nueva encuesta
+                    d3.setContentView(R.layout.pineldialog);
+                    //Se asigna un titulo al dialogo
+                    d3.setTitle("Ingresa tu pin para confimar la compra");
+                    final EditText pinControl = (EditText) d3.findViewById(R.id.pin_confirmacion);
+                    ImageButton back = (ImageButton) d3.findViewById(R.id.pin_back_btn);
+                    ImageButton confirm = (ImageButton) d3.findViewById(R.id.pin_confirm_btn);
+
+
+                    confirm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Hash h = new Hash();
+                            if(h.getHexValue(pinControl.getText().toString()).equals(pin)){
+                                Toast.makeText(getApplicationContext(), "Espere...", Toast.LENGTH_SHORT).show();
+                                Transaccion t = cartera.comprarBoleto(a.get( boletos.getSelectedItemPosition() ));
+                                if(t!=null){
+                                    api.makeTransaction(t, cartera);
+                                    d3.dismiss();
+                                }
+                                else{
+                                    Toast.makeText(CX, "No puedes realizarte una transacción a ti mismo", Toast.LENGTH_SHORT).show();
+                                    d3.dismiss();
+                                }
+
+                            }else{
+                                Toast.makeText(CX, "PIN incorrecto", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                    back.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            d3.dismiss();
+                        }
+                    });
+
+
+                    d3.show();
+
+
+
+
+
+
+
                 }
             }
         });

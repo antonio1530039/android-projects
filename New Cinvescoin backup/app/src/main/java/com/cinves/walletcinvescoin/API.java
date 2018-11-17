@@ -185,4 +185,8 @@ public class API implements Serializable {
         //this.blockchain.saveBlockchain(this.ruta);
     }
 
+    public boolean transactionExists(Transaccion t){
+        return this.blockchain.transactionExists(t);
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.cinves.walletcinvescoin;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import amp_new.Security.Hash;
 import amp_new.Tools.Utilities;
 
 public class Transferencia extends Activity {
@@ -59,6 +61,7 @@ public class Transferencia extends Activity {
 
 
         final byte[] rawKp = i.getByteArrayExtra("keypair");
+        final String pin = i.getStringExtra("pin");
         //Deserializacion de par de llaves
         final KeyPair kp = db.deserializeKeyPair(rawKp);
 
@@ -82,20 +85,71 @@ public class Transferencia extends Activity {
             @Override
             public void onClick(View v) {
                 if(!address.getText().toString().equals("") && !cantidad.getText().toString().equals("")){
-                    HashMap<String, Carterita> nodes = db.getAllNodes();
-                    Carterita c = nodes.get(address.getText().toString());
-                    if(c!= null){
-                        Toast.makeText(getApplicationContext(), "Espere...", Toast.LENGTH_SHORT).show();
-                        Transaccion t = cartera.makeTransfer(c.kp.getPublic(), Double.valueOf(cantidad.getText().toString()));
-                        if(t != null){
-                            api.makeTransaction(t, cartera);
-                        }
-                        else
-                            Toast.makeText(getApplicationContext(), "No puedes realizarte una transacción a ti mismo", Toast.LENGTH_SHORT).show();
-                    }
 
-                    else
-                        Toast.makeText(getApplicationContext(), "No existe ningun usuario con esa dirección", Toast.LENGTH_LONG).show();
+                    final Dialog d3 = new Dialog(CX);
+                    //Se asigna al layout el archivo xml que contiene el formulario para agregar una nueva encuesta
+                    d3.setContentView(R.layout.pineldialog);
+                    //Se asigna un titulo al dialogo
+                    d3.setTitle("Ingresa tu pin para confimar la transferencia");
+                    final EditText pinControl = (EditText) d3.findViewById(R.id.pin_confirmacion);
+                    ImageButton back = (ImageButton) d3.findViewById(R.id.pin_back_btn);
+                    ImageButton confirm = (ImageButton) d3.findViewById(R.id.pin_confirm_btn);
+
+
+                    confirm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Hash h = new Hash();
+
+                            if(h.getHexValue(pinControl.getText().toString()).equals(pin)){
+
+                                HashMap<String, Carterita> nodes = db.getAllNodes();
+                                Carterita c = nodes.get(address.getText().toString());
+                                if(c!= null){
+                                    Toast.makeText(getApplicationContext(), "Espere...", Toast.LENGTH_SHORT).show();
+                                    Transaccion t = cartera.makeTransfer(c.kp.getPublic(), Double.valueOf(cantidad.getText().toString()));
+                                    if(t != null){
+                                        api.makeTransaction(t, cartera);
+                                        d3.dismiss();
+                                    }
+                                    else{
+                                        Toast.makeText(getApplicationContext(), "No puedes realizarte una transacción a ti mismo", Toast.LENGTH_SHORT).show();
+                                        d3.dismiss();
+                                    }
+
+                                }
+
+                                else{
+                                    Toast.makeText(getApplicationContext(), "No existe ningun usuario con esa dirección", Toast.LENGTH_LONG).show();
+                                    d3.dismiss();
+                                }
+
+
+                            }else{
+                                Toast.makeText(CX, "PIN incorrecto", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+                    back.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            d3.dismiss();
+                        }
+                    });
+
+
+                    d3.show();
+
+
+
+
+
+
+
+
+
+
                 }
             }
         });

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 
 import amp_new.Security.DigitalSignature;
+import amp_new.Security.Hash;
 import amp_new.Tools.Utilities;
 
 public class MainActivity extends Activity {
@@ -70,6 +71,8 @@ public class MainActivity extends Activity {
                         Intent newActivity = new Intent(MainActivity.this, Segunda.class);
                         //KeyPair kp = db.deserializeKeyPair(c.getBlob(1));
                         newActivity.putExtra("keypair", c.getBlob(1));
+                        Hash h = new Hash();
+                        newActivity.putExtra("pin", h.getHexValue(pin.getText().toString()));
                         startActivity(newActivity);
                         //Toast.makeText(getApplicationContext(), "Bienvenido!", Toast.LENGTH_SHORT).show();
                     }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -62,11 +63,14 @@ public class Historial extends Activity {
          //       "June", "July", "August", "September", "October", "November","December" };
 
         ArrayList<String> objects = new ArrayList<>();
+        final ArrayList<Transaccion> arrTransactions = new ArrayList<>();
 
 
+        //Instancia de API con dificultad
+        final com.cinves.walletcinvescoin.API api = new com.cinves.walletcinvescoin.API(0, Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/cinvescoin/blockchain.x", this);
 
         //Leer la cadena de bloques
-        Blockchain bc = Utilities.readMyBlockchain(Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/cinvescoin/blockchain.x");
+        Blockchain bc = api.blockchain;
         if(bc!=null){
             for(Block b : bc.chain){
                 for(Transaction t: b.transactions){
@@ -78,10 +82,14 @@ public class Historial extends Activity {
                                     +"\n\n- A: "+ ( (Utilities.encode(t.publicKeyReceiver.getEncoded()).equals(Utilities.encode(kp.getPublic().getEncoded()))) ? "Mi dirección" :  Utilities.encode(t.publicKeyReceiver.getEncoded()) )
                                     + "\n\n- Concepto: " +
                                     ((t.concept.getClass().isInstance(new Boleto())) ?  "\n\n----\nBoleto\n" +((Boleto) t.concept).ruta+ "\n"+ ((Boleto) t.concept).periodo+"\nPrecio: " +((Boleto) t.concept).precio+" CC\n---" : t.concept.toString()+ " CC" ));
+                            arrTransactions.add((Transaccion) t);
                         }
                     }else{
-                        if(Utilities.encode(t.publicKeyReceiver.getEncoded()).equals(Utilities.encode(kp.getPublic().getEncoded())) )
+                        if(Utilities.encode(t.publicKeyReceiver.getEncoded()).equals(Utilities.encode(kp.getPublic().getEncoded())) ){
+                            arrTransactions.add((Transaccion) t);
                             objects.add("Recompensa por minar: " + t.concept.toString() + " CC");
+                        }
+
                     }
 
                    }
@@ -121,7 +129,16 @@ public class Historial extends Activity {
 
 
 
-
+        LV1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(api.transactionExists(arrTransactions.get(position))){
+                    Toast.makeText(getApplicationContext(), "Transacción válida en la cadena", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Transacción inválida", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
 
 
