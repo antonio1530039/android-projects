@@ -13,27 +13,42 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import org.spongycastle.jce.ECNamedCurveTable;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
+import org.spongycastle.jce.spec.ECNamedCurveParameterSpec;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.Key;
 import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.Security;
 import java.text.ParseException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import amp_new.Blockchain.Block;
+import amp_new.Blockchain.Blockchain;
 import amp_new.Security.DigitalSignature;
 import amp_new.Security.Hash;
 import amp_new.Tools.Utilities;
 
 public class MainActivity extends Activity {
 
-    ImageButton iniciar;
+    ImageButton iniciar, experimento;
 
 
     private static final int REQUEST_ID_READ_PERMISSION = 100;
@@ -47,6 +62,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         Security.insertProviderAt(new BouncyCastleProvider(), 1);
         iniciar = (ImageButton) findViewById(R.id.btn_iniciar);
+        experimento = (ImageButton) findViewById(R.id.experimento_btn);
         user = (EditText) findViewById(R.id.user_et);
         pin = (EditText) findViewById(R.id.pin_et);
 
@@ -97,8 +113,172 @@ public class MainActivity extends Activity {
             }
         });
 
+
+        experimento.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                performExperiment();
+            }
+        });
+
     }
 
+
+    public void performExperiment() {
+
+        try {
+            verifyPath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Toast.makeText(getApplicationContext(), "Starting experiment...", Toast.LENGTH_SHORT).show();
+
+        //Experimento 1. Crear 100 transacciones y procesarlas
+
+        //Medir tiempo
+
+
+        //Generate KeyPair for transaction
+
+        KeyPair kp;
+        DigitalSignature ds = new DigitalSignature();
+        kp = ds.generateKeyPair();
+
+        long start = System.nanoTime();
+        for (int i = 0; i < 100; i++) {
+            Transaccion t = new Transaccion(kp.getPublic(), 100.0, i);
+            t.processTransaction();
+        }
+        long end = System.nanoTime();
+
+        double timeTaked = ((end - start) / 1000000.0) / 1000.0;
+
+        double timeTakedByTransaction = timeTaked / 100.0;
+
+        PrintWriter writer = null;
+
+
+        try {
+            writer = new PrintWriter(
+                    Environment.getExternalStorageDirectory().getAbsolutePath().toString() + "/cinvescoin/experimento.txt"
+                    , "UTF-8");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        writer.println("=============");
+        writer.println("Experimento 1. Transacciones procesadas por segundo");
+        writer.println("100 transacciones realizadas en: " + timeTaked + " seg");
+        writer.println("Cada transacción toma: " + timeTakedByTransaction + " seg");
+        writer.println("Transacciones por segundo: " + (1.0 / timeTakedByTransaction));
+        writer.println("=============");
+
+
+        //Experimento 2. Número de transacciones por segundo variando el nivel de seguridad
+
+
+        ArrayList<String> curves = new ArrayList<>();
+
+        curves.add("P-256");
+        curves.add("P-384");
+        curves.add("P-521");
+
+
+        for (int i = 0; i < curves.size(); i++) {
+            KeyPair kpNew;
+            kpNew = generateKeyPairForExperiment(curves.get(i));
+            long start2 = System.nanoTime();
+
+            for (int j = 0; j < 100; j++) {
+                Transaccion t = new Transaccion(kpNew.getPublic(), 100.0, i);
+                t.processTransaction();
+            }
+            long end2 = System.nanoTime();
+            double timeTaked2 = ((end2 - start2) / 1000000.0) / 1000.0;
+            double timeTakedByTransaction2 = timeTaked2 / 100.0;
+
+            writer.println("=============");
+            writer.println("Experimento 2." + (i + 1) + ". Curva: " + curves.get(i));
+            writer.println("100 transacciones realizadas en: " + timeTaked2 + " seg");
+            writer.println("Cada transacción toma: " + timeTakedByTransaction2 + " seg");
+            writer.println("Transacciones por segundo: " + (1.0 / timeTakedByTransaction2));
+            writer.println("=============");
+
+
+        }
+
+
+
+
+        //Experimento 3. Número de bloques agregados a la cadena por segundo
+
+        Blockchain bc = new Blockchain(0);
+
+        long start3 = System.nanoTime();
+        for(int i = 0; i < 100; i++){
+            Transaccion t = new Transaccion(kp.getPublic(), 100.0, i);
+            Block b = new Block(t, bc.getLashHashInChain() );
+            b.addTransaction(t);
+            b.mineBlock(0);
+            bc.addBlock(b);
+        }
+        long end3 = System.nanoTime();
+        double timeTaked3 = ((end3 - start3) / 1000000.0) / 1000.0;
+        double timeTakedByTransaction3 = timeTaked3 / 100.0;
+
+        writer.println("=============");
+        writer.println("Experimento 3. Numero de bloques agregados a la cadena por seg");
+        writer.println("100 Bloques creados y agregados en: " + timeTaked3 + " seg");
+        writer.println("Crear y agregar un bloque toma: " + timeTakedByTransaction3 + " seg");
+        writer.println("En un segundo, se crean y agregan: " + (1.0 / timeTakedByTransaction3) + " bloques");
+        writer.println("La cadena es válida: " + bc.validateChain());
+
+        writer.println("=============");
+
+
+
+        writer.close();
+
+
+
+
+        Toast.makeText(getApplicationContext(), "Done!", Toast.LENGTH_SHORT).show();
+
+
+
+
+
+    }
+
+
+    public KeyPair generateKeyPairForExperiment(String curve) {
+        try {
+            //Defautl: P-224
+            ECNamedCurveParameterSpec ecSpec = ECNamedCurveTable.getParameterSpec(curve);
+            KeyPairGenerator g = KeyPairGenerator.getInstance("ECDSA");
+            g.initialize(ecSpec, new SecureRandom());
+            return g.generateKeyPair();
+        } catch (NoSuchAlgorithmException var3) {
+            Logger.getLogger(DigitalSignature.class.getName()).log(Level.SEVERE, (String)null, var3);
+        } catch (InvalidAlgorithmParameterException var4) {
+            Logger.getLogger(DigitalSignature.class.getName()).log(Level.SEVERE, (String)null, var4);
+        }
+
+        return null;
+    }
+
+
+
+    private void verifyPath () throws IOException {
+        String Ruta= Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/cinvescoin";
+        File F = new File (Ruta);
+        if (!F.exists()) { // Ya existe el directorio
+            Toast.makeText(getApplicationContext(),"Se ha creado la ruta",Toast.LENGTH_SHORT).show();
+            F.mkdir();
+        }
+    }
 
 
     private void askPermissionOnly() {
