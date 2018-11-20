@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,19 +34,9 @@ import amp_new.Tools.Utilities;
  */
 public class dbConnect extends SQLiteOpenHelper implements Serializable {
 
-    String dbPath;
-    String dbName;
-
-    final String NombreDirectorio ="Cinvesoin";
-    //this.dbPath = Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/"+NombreDirectorio+"/";
-
-
 
 
     public static final String DATABASE_NAME = "cinvescoin.db";
-    //private HashMap hp;
-
-
 
     public dbConnect(Context context) {
         super(context, DATABASE_NAME , null, 1);
@@ -264,13 +253,13 @@ public class dbConnect extends SQLiteOpenHelper implements Serializable {
         return array_list;
     }
 
-    public HashMap<String, Carterita> getAllNodes() {
+    public HashMap<String, Cartera_sa> getAllNodes() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from node", null );
         res.moveToFirst();
-        HashMap<String, Carterita> nodes = new HashMap();
+        HashMap<String, Cartera_sa> nodes = new HashMap();
         while(res.isAfterLast() == false){
-            Carterita c = new Carterita();
+            Cartera_sa c = new Cartera_sa();
             c.user = res.getString(2);
             c.password = res.getString(3);
             c.kp = deserializeKeyPair(res.getBlob(1));

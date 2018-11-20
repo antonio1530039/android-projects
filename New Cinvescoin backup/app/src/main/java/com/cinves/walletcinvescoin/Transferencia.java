@@ -17,13 +17,9 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.security.KeyPair;
-import java.security.PublicKey;
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import amp_new.Security.Hash;
-import amp_new.Tools.Utilities;
 
 public class Transferencia extends Activity {
 
@@ -103,8 +99,8 @@ public class Transferencia extends Activity {
 
                             if(h.getHexValue(pinControl.getText().toString()).equals(pin)){
 
-                                HashMap<String, Carterita> nodes = db.getAllNodes();
-                                Carterita c = nodes.get(address.getText().toString());
+                                HashMap<String, Cartera_sa> nodes = db.getAllNodes();
+                                Cartera_sa c = nodes.get(address.getText().toString());
                                 if(c!= null){
                                     Toast.makeText(getApplicationContext(), "Espere...", Toast.LENGTH_SHORT).show();
                                     Transaccion t = cartera.makeTransfer(c.kp.getPublic(), Double.valueOf(cantidad.getText().toString()));

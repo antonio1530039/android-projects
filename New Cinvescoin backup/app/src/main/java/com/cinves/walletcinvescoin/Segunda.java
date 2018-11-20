@@ -1,6 +1,7 @@
 package com.cinves.walletcinvescoin;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
@@ -78,8 +79,10 @@ public class Segunda extends Activity {
 
         //Enviar incentivo
 
-        if(!cartera.verifyFirstIncentive())
+        if(!cartera.verifyFirstIncentive()){
             api.makeTransaction(cartera.getFirstIncentive(), cartera);
+        }
+
 
         updateSaldo(cartera);
 

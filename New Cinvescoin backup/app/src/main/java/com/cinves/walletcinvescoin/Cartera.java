@@ -27,12 +27,10 @@ import java.security.Security;
 public class Cartera extends com.cinves.walletcinvescoin.MinerNode implements Serializable{
 
     public int transaccionesRealizadas;
-
     public Cartera() {
         super();
         this.transaccionesRealizadas = 0;
     }
-
 
     public boolean verifyFirstIncentive(){
         Blockchain bc = Utilities.readMyBlockchain(Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/cinvescoin/blockchain.x");;

@@ -5,7 +5,9 @@
  */
 package com.cinves.walletcinvescoin;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.widget.Toast;
 
@@ -30,7 +32,7 @@ import java.util.TimerTask;
  *
  * @author cti
  */
-public class API implements Serializable {
+public class API extends AsyncTask<String, Void, Boolean> implements Serializable {
 
     public Blockchain blockchain;
     //ArrayList<com.cinves.walletcinvescoin.Node> nodes;
@@ -38,6 +40,7 @@ public class API implements Serializable {
     boolean incentiveControlV;
     String ruta;
     Context CX;
+    private ProgressDialog dialog;
 
     /**
      * Constructor
@@ -55,6 +58,7 @@ public class API implements Serializable {
             System.out.println("==============Blockchain was reading from storage============");
         }
         this.CX = c;
+        dialog = new ProgressDialog(c);
         //this.nodes = new ArrayList<com.cinves.walletcinvescoin.Node>();
         this.difficultyOfPow = difficultyOfPow;
         this.incentiveControlV = false;
@@ -85,11 +89,14 @@ public class API implements Serializable {
 
     public boolean makeTransaction(Transaccion transaction, com.cinves.walletcinvescoin.Node node) {
        //Toast.makeText(CX, "Espere...", Toast.LENGTH_SHORT).show();
+        onPreExecute();
         if (propagateTransaction(transaction, node)) {
+            onPostExecute(false);
             return true;
         }else{
             Toast.makeText(CX, "Transacción no aprobada... No tienes monedas suficientes", Toast.LENGTH_SHORT).show();
         }
+        onPostExecute(false);
         return false;
     }
 
@@ -187,6 +194,38 @@ public class API implements Serializable {
 
     public boolean transactionExists(Transaccion t){
         return this.blockchain.transactionExists(t);
+    }
+
+
+
+    /** progress dialog to show user that the backup is processing. */
+    /** application context. */
+    @Override
+    protected void onPreExecute() {
+        this.dialog.setMessage("Please wait");
+        this.dialog.show();
+    }
+
+    @Override
+    protected Boolean doInBackground(final String... args) {
+        try {
+            return true;
+        } catch (Exception e) {
+
+            return false;
+        }
+    }
+
+    @Override
+    protected void onPostExecute(final Boolean success) {
+
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
+
+
+
+        // Setting data to list adapter
     }
 
 }

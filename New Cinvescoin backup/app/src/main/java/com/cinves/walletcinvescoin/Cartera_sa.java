@@ -14,7 +14,7 @@ import amp_new.Blockchain.Block;
 import amp_new.Blockchain.Blockchain;
 import amp_new.Blockchain.Transaction;
 
-public class Carterita implements Serializable{
+public class Cartera_sa implements Serializable{
 
     public String user;
     public String password;
@@ -22,7 +22,7 @@ public class Carterita implements Serializable{
 
     KeyPair kp;
 
-    public Carterita() {
+    public Cartera_sa() {
 
     }
 
