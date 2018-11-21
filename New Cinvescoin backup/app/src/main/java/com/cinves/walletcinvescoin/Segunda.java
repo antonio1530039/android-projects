@@ -33,6 +33,7 @@ public class Segunda extends Activity {
     Button copiar;
     TextView balance;
     ImageButton update;
+    Cartera currentWallet;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,28 +71,32 @@ public class Segunda extends Activity {
         address.setText(Utilities.encode(kp.getPublic().getEncoded()));
 
 
-        final Cartera cartera = new Cartera();
+        currentWallet = new Cartera();
 
-        cartera.setKeyPair(kp.getPublic(), kp.getPrivate());
+        currentWallet.setKeyPair(kp.getPublic(), kp.getPrivate());
 
         //Instancia de API con dificultad
         final com.cinves.walletcinvescoin.API api = new com.cinves.walletcinvescoin.API(0, Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/cinvescoin/blockchain.x", this);
 
         //Enviar incentivo
 
-        if(!cartera.verifyFirstIncentive()){
-            api.makeTransaction(cartera.getFirstIncentive(), cartera);
+        if(!currentWallet.verifyFirstIncentive()){
+            apiTransaction ap = new apiTransaction();
+            ap.transaction = currentWallet.getFirstIncentive();
+            ap.node = currentWallet;
+            //api.makeTransaction(cartera.getFirstIncentive(), cartera);
+            api.execute(ap);
         }
 
-
-        updateSaldo(cartera);
+        CheckSaldo cs = new CheckSaldo(this, balance);
+        cs.execute(currentWallet);
 
 
 
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateSaldo(cartera);
+                updateSaldo(currentWallet);
             }
         });
 
@@ -149,8 +154,17 @@ public class Segunda extends Activity {
     }
 
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        updateSaldo(currentWallet);
+
+    }
+
+
     private void updateSaldo(Cartera cartera){
-        balance.setText(""+cartera.miSaldo()+" CC");
+        CheckSaldo cs = new CheckSaldo(this, balance);
+        cs.execute(cartera);
     }
 
 

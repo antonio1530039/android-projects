@@ -77,7 +77,6 @@ public class Cartera extends com.cinves.walletcinvescoin.MinerNode implements Se
                 } else if (Utilities.encode(t.publicKeyReceiver.getEncoded()).equals(Utilities.encode(address.getEncoded())) ) {
                    balance += getConceptValue(t.concept);
                 }
-
             }
         }
         return balance;
@@ -130,7 +129,6 @@ public class Cartera extends com.cinves.walletcinvescoin.MinerNode implements Se
         //Agregar hash previo
         block.prevHash = api.getLastHashInChain();
         //Minar bloque
-        //Toast.makeText(CX, "****Minando bloque****", Toast.LENGTH_SHORT).show();
         block.mineBlock(api.getDifficultyOfPow());
         //Enviar bloque
         api.newBlockMined(this, block);

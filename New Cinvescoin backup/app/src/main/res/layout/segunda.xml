@@ -29,28 +29,24 @@
         </LinearLayout>
 
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Balance:"
+                android:text="Balance"
                 android:textSize="30dp"
                 android:textColor="#212121"
-                android:textStyle="bold"/>
-            <TextView
-                android:layout_width="0dp"
-                android:id="@+id/balance_tv"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="30dp"
-                android:text="300 CC"
-                android:textColor="#00641b"
                 android:textStyle="bold"/>
             <ImageButton
                 android:layout_width="50dp"
@@ -60,11 +56,28 @@
                 android:id="@+id/update"
                 android:src="@drawable/update"
                 android:background="#FFFFFF"
+                android:layout_gravity="right"
                 />
 
-
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/balance_tv"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:text=""
+            android:gravity="center"
+            android:textColor="#00641b"
+            android:textStyle="bold"/>
         </LinearLayout>
 
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -78,6 +91,16 @@
                 android:textSize="30dp"
                 android:textColor="#212121"
                 android:textStyle="bold"/>
+            <ImageButton
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_weight="0.1"
+                android:scaleType="fitCenter"
+                android:src="@drawable/copy"
+                android:background="#FFFFFF"
+                android:id="@+id/copy_btn"
+                android:layout_gravity="center_horizontal"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -92,19 +115,11 @@
                 android:hint="Address"
                 android:id="@+id/address_et"
                 android:enabled="false"/>
-            <ImageButton
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_weight="0.1"
-                android:scaleType="fitCenter"
-                android:src="@drawable/copy"
-                android:background="#FFFFFF"
-                android:id="@+id/copy_btn"
-                android:layout_gravity="center_horizontal"
-                />
+
 
         </LinearLayout>
 
+        </LinearLayout>
 
 
 

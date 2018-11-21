@@ -32,7 +32,7 @@ import java.util.TimerTask;
  *
  * @author cti
  */
-public class API extends AsyncTask<String, Void, Boolean> implements Serializable {
+public class API extends AsyncTask<apiTransaction, Void, Boolean> implements Serializable {
 
     public Blockchain blockchain;
     //ArrayList<com.cinves.walletcinvescoin.Node> nodes;
@@ -54,8 +54,6 @@ public class API extends AsyncTask<String, Void, Boolean> implements Serializabl
         if (this.blockchain == null) {
             this.blockchain = new Blockchain(difficultyOfPow); //Instancia de la cadena de bloques
             this.saveChain();
-        }else{
-            System.out.println("==============Blockchain was reading from storage============");
         }
         this.CX = c;
         dialog = new ProgressDialog(c);
@@ -89,14 +87,11 @@ public class API extends AsyncTask<String, Void, Boolean> implements Serializabl
 
     public boolean makeTransaction(Transaccion transaction, com.cinves.walletcinvescoin.Node node) {
        //Toast.makeText(CX, "Espere...", Toast.LENGTH_SHORT).show();
-        onPreExecute();
         if (propagateTransaction(transaction, node)) {
-            onPostExecute(false);
             return true;
         }else{
-            Toast.makeText(CX, "Transacción no aprobada... No tienes monedas suficientes", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(CX, "Transacción no aprobada... No tienes monedas suficientes", Toast.LENGTH_SHORT).show();
         }
-        onPostExecute(false);
         return false;
     }
 
@@ -146,11 +141,11 @@ public class API extends AsyncTask<String, Void, Boolean> implements Serializabl
                 this.blockchain.addBlock(block);
                 node.clearTransactionsSaved();
                 this.saveChain();
-                Toast.makeText(this.CX, "Transacción registrada!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this.CX, "Transacción registrada!", Toast.LENGTH_SHORT).show();
                 //Crear transaccion con incentivo
                 if (this.incentiveControlV) {
                     this.incentiveControl();
-                    Toast.makeText(CX, "Espere...", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(CX, "Espere...", Toast.LENGTH_SHORT).show();
                     this.makeTransaction((Transaccion) node.rewardOfPow(), node);
                 }
 
@@ -197,34 +192,43 @@ public class API extends AsyncTask<String, Void, Boolean> implements Serializabl
     }
 
 
+    public boolean makeTransaction(apiTransaction ap){
+        //Toast.makeText(CX, "Espere...", Toast.LENGTH_SHORT).show();
+        if (propagateTransaction( (Transaccion) ap.transaction, ap.node)) {
+            return true;
+        }else{
+            //Toast.makeText(CX, "Transacción no aprobada... No tienes monedas suficientes", Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
 
-    /** progress dialog to show user that the backup is processing. */
+
+    @Override
+    protected Boolean doInBackground(apiTransaction... apiTransactions) {
+        if(this.makeTransaction(apiTransactions[0]))
+            return true;
+        else
+            return false;
+
+    }
+
     /** application context. */
     @Override
     protected void onPreExecute() {
-        this.dialog.setMessage("Please wait");
+        this.dialog.setMessage("Procesando transacción...");
         this.dialog.show();
     }
 
-    @Override
-    protected Boolean doInBackground(final String... args) {
-        try {
-            return true;
-        } catch (Exception e) {
-
-            return false;
-        }
-    }
 
     @Override
     protected void onPostExecute(final Boolean success) {
-
         if (dialog.isShowing()) {
             dialog.dismiss();
+            if(success)
+                Toast.makeText(CX, "Transacción registrada", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(CX, "Transacción no registrada! Verifique que tenga suficientes monedas para realizar la transacción", Toast.LENGTH_LONG).show();
         }
-
-
-
         // Setting data to list adapter
     }
 

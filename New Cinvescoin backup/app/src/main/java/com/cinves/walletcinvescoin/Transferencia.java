@@ -102,11 +102,15 @@ public class Transferencia extends Activity {
                                 HashMap<String, Cartera_sa> nodes = db.getAllNodes();
                                 Cartera_sa c = nodes.get(address.getText().toString());
                                 if(c!= null){
-                                    Toast.makeText(getApplicationContext(), "Espere...", Toast.LENGTH_SHORT).show();
                                     Transaccion t = cartera.makeTransfer(c.kp.getPublic(), Double.valueOf(cantidad.getText().toString()));
                                     if(t != null){
-                                        api.makeTransaction(t, cartera);
                                         d3.dismiss();
+                                        apiTransaction ap = new apiTransaction();
+                                        ap.transaction = t;
+                                        ap.node = cartera;
+                                        //api.makeTransaction(t, cartera);
+                                        api.execute(ap);
+
                                     }
                                     else{
                                         Toast.makeText(getApplicationContext(), "No puedes realizarte una transacción a ti mismo", Toast.LENGTH_SHORT).show();

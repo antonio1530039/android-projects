@@ -138,11 +138,16 @@ public class Buy extends Activity {
                         public void onClick(View v) {
                             Hash h = new Hash();
                             if(h.getHexValue(pinControl.getText().toString()).equals(pin)){
-                                Toast.makeText(getApplicationContext(), "Espere...", Toast.LENGTH_SHORT).show();
                                 Transaccion t = cartera.comprarBoleto(a.get( boletos.getSelectedItemPosition() ));
                                 if(t!=null){
-                                    api.makeTransaction(t, cartera);
                                     d3.dismiss();
+                                    apiTransaction ap = new apiTransaction();
+                                    ap.transaction = t;
+                                    ap.node = cartera;
+
+                                    //api.makeTransaction(t, cartera);
+                                    api.execute(ap);
+
                                 }
                                 else{
                                     Toast.makeText(CX, "No puedes realizarte una transacción a ti mismo", Toast.LENGTH_SHORT).show();
