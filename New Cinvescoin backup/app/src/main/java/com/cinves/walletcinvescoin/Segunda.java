@@ -23,7 +23,7 @@ import java.security.KeyPair;
 
 import amp_new.AppInterface.API;
 import amp_new.Security.Hash;
-import amp_new.Tools.Utilities;
+import amp_new.Security.Utilities;
 
 public class Segunda extends Activity {
 

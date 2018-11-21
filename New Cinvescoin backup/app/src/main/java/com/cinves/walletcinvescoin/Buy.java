@@ -33,7 +33,7 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 
 import amp_new.Security.Hash;
-import amp_new.Tools.Utilities;
+import amp_new.Security.Utilities;
 
 public class Buy extends Activity {
 

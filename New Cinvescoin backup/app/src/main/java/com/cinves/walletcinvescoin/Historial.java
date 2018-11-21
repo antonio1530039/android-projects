@@ -32,7 +32,7 @@ import java.util.List;
 import amp_new.Blockchain.Block;
 import amp_new.Blockchain.Blockchain;
 import amp_new.Blockchain.Transaction;
-import amp_new.Tools.Utilities;
+import amp_new.Security.Utilities;
 
 public class Historial extends Activity {
 

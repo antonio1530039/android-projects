@@ -27,6 +27,7 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import amp_new.Security.*;
 
 /**
  *
@@ -49,7 +50,7 @@ public class API extends AsyncTask<apiTransaction, Void, Boolean> implements Ser
      */
     public API(int difficultyOfPow, String ruta, Context c) {
         //Cargar cadena de bloques
-        this.blockchain = amp_new.Tools.Utilities.readMyBlockchain(ruta);
+        this.blockchain = Utilities.readMyBlockchain(ruta);
         this.ruta = ruta;
         if (this.blockchain == null) {
             this.blockchain = new Blockchain(difficultyOfPow); //Instancia de la cadena de bloques
@@ -70,7 +71,7 @@ public class API extends AsyncTask<apiTransaction, Void, Boolean> implements Ser
             public void run() {
                 incentiveControl();
             }
-        }, 0, 1000 * 10);
+        }, 0, 1000 * 60);
     }
 
 
@@ -107,9 +108,16 @@ public class API extends AsyncTask<apiTransaction, Void, Boolean> implements Ser
             if (transaction.processTransaction()) {
                 //Enviar transaccion a mineros
                 
-                com.cinves.walletcinvescoin.MinerNode mn = (com.cinves.walletcinvescoin.MinerNode) node;
-                mn.registerTransaction(transaction, this);
-                
+                //com.cinves.walletcinvescoin.MinerNode mn = (com.cinves.walletcinvescoin.MinerNode) node;
+                //mn.registerTransaction(transaction, this);
+
+
+
+                ((com.cinves.walletcinvescoin.MinerNode)node).registerTransaction(transaction, this);
+
+
+
+
                 /*for (Node n : this.nodes) {
                     //Verificar si es instancia de un nodo minero
                     MinerNode mn = (MinerNode) n;
@@ -125,18 +133,19 @@ public class API extends AsyncTask<apiTransaction, Void, Boolean> implements Ser
     }
 
     public void newBlockMined(com.cinves.walletcinvescoin.MinerNode node, Block block) {
-        this.blockchain = amp_new.Tools.Utilities.readMyBlockchain(ruta);
+        this.blockchain = Utilities.readMyBlockchain(ruta);
         boolean exists = false;
         //Verificar que el bloque no este en la cadena ya
-        for (Block b : this.blockchain.chain) {
-            if (b.hash.equals(block.hash)){
-                System.out.println("..........................................................................................................");
-                exists = true;
-                break;
-            }
-        }
 
-        if (!exists) {
+       // for (Block b : this.blockchain.chain) {
+         //   if (b.hash.equals(block.hash)){
+           //     System.out.println("..........................................................................................................");
+             //   exists = true;
+                //break;
+            //}
+        //}
+
+       // if (!exists) {
             if (node.verifyBlock(block)) {
                 this.blockchain.addBlock(block);
                 node.clearTransactionsSaved();
@@ -150,7 +159,7 @@ public class API extends AsyncTask<apiTransaction, Void, Boolean> implements Ser
                 }
 
             }
-        }
+        //}
         
         node.clearTransactionsSaved();
 

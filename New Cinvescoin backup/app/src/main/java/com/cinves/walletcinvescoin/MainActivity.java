@@ -25,6 +25,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.Key;
@@ -37,6 +38,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,7 +46,7 @@ import amp_new.Blockchain.Block;
 import amp_new.Blockchain.Blockchain;
 import amp_new.Security.DigitalSignature;
 import amp_new.Security.Hash;
-import amp_new.Tools.Utilities;
+import amp_new.Security.Utilities;
 
 public class MainActivity extends Activity {
 
@@ -146,19 +148,18 @@ public class MainActivity extends Activity {
         kp = ds.generateKeyPair();
 
         long start = System.nanoTime();
-        for (int i = 0; i < 100; i++) {
-            Transaccion t = new Transaccion(kp.getPublic(), 100.0, i);
-            t.processTransaction();
-        }
+        Transaccion t = new Transaccion(kp.getPublic(), 100.0, 0);
+        t.processTransaction();
+        //for (int i = 0; i < 100; i++) {
+          //  Transaccion t = new Transaccion(kp.getPublic(), 100.0, i);
+            //t.processTransaction();
+        //}
         long end = System.nanoTime();
 
         double timeTaked = ((end - start) / 1000000.0) / 1000.0;
 
-        double timeTakedByTransaction = timeTaked / 100.0;
-
+        //Abrir archivo de texto
         PrintWriter writer = null;
-
-
         try {
             writer = new PrintWriter(
                     Environment.getExternalStorageDirectory().getAbsolutePath().toString() + "/cinvescoin/experimento.txt"
@@ -170,9 +171,8 @@ public class MainActivity extends Activity {
         }
         writer.println("=============");
         writer.println("Experimento 1. Transacciones procesadas por segundo");
-        writer.println("100 transacciones realizadas en: " + timeTaked + " seg");
-        writer.println("Cada transacción toma: " + timeTakedByTransaction + " seg");
-        writer.println("Transacciones por segundo: " + (1.0 / timeTakedByTransaction));
+        writer.println("El experimentó se realizó en: " + timeTaked + " seg");
+        writer.println("Número de transacciones por segundo: " + (1.0 / timeTaked) + " seg");
         writer.println("=============");
 
 
@@ -190,20 +190,19 @@ public class MainActivity extends Activity {
             KeyPair kpNew;
             kpNew = generateKeyPairForExperiment(curves.get(i));
             long start2 = System.nanoTime();
-
-            for (int j = 0; j < 100; j++) {
-                Transaccion t = new Transaccion(kpNew.getPublic(), 100.0, i);
-                t.processTransaction();
-            }
+            Transaccion tt = new Transaccion(kpNew.getPublic(), 100.0, 0);
+            tt.processTransaction();
+            //for (int j = 0; j < 100; j++) {
+                //Transaccion t = new Transaccion(kpNew.getPublic(), 100.0, i);
+                //t.processTransaction();
+            //}
             long end2 = System.nanoTime();
             double timeTaked2 = ((end2 - start2) / 1000000.0) / 1000.0;
-            double timeTakedByTransaction2 = timeTaked2 / 100.0;
 
             writer.println("=============");
             writer.println("Experimento 2." + (i + 1) + ". Curva: " + curves.get(i));
-            writer.println("100 transacciones realizadas en: " + timeTaked2 + " seg");
-            writer.println("Cada transacción toma: " + timeTakedByTransaction2 + " seg");
-            writer.println("Transacciones por segundo: " + (1.0 / timeTakedByTransaction2));
+            writer.println("Una transacción toma: " + timeTaked2 + " seg");
+            writer.println("Número de transacciones por segundo: " + (1.0 / timeTaked2)+ " seg");
             writer.println("=============");
 
 
@@ -216,27 +215,33 @@ public class MainActivity extends Activity {
 
         Blockchain bc = new Blockchain(0);
 
-        long start3 = System.nanoTime();
-        for(int i = 0; i < 100; i++){
-            Transaccion t = new Transaccion(kp.getPublic(), 100.0, i);
-            Block b = new Block(t, bc.getLashHashInChain() );
-            b.addTransaction(t);
-            b.mineBlock(0);
-            bc.addBlock(b);
+
+        Integer[] exp3 = {10, 100, 1000};
+
+        for(int i = 0; i < exp3.length; i++){
+
+
+
+                Block b = new Block(new Transaccion(kp.getPublic(), 100.0, 0), bc.getLashHashInChain() );
+
+                for(int j = 0; j < exp3[i]-1; j++){
+                    b.addTransaction(new Transaccion(kp.getPublic(), 100.0, j+1));
+                }
+                long start3 = System.nanoTime();
+                b.mineBlock(0);
+                bc.addBlock(b);
+                long end3 = System.nanoTime();
+
+            double timeTaked3 = ((end3 - start3) / 1000000.0) / 1000.0;
+
+
+            writer.println("=============");
+            writer.println("Experimento 3." + (i+1) + ". Transacciones agregadas en cada bloque: " + exp3[i]);
+            writer.println("Cada bloque toma: " + timeTaked3 + " seg");
+            writer.println("En un segundo, se agregan: " + (1.0 / timeTaked3) + " bloques");
+            writer.println("La cadena es válida: " + bc.validateChain());
+            writer.println("=============");
         }
-        long end3 = System.nanoTime();
-        double timeTaked3 = ((end3 - start3) / 1000000.0) / 1000.0;
-        double timeTakedByTransaction3 = timeTaked3 / 100.0;
-
-        writer.println("=============");
-        writer.println("Experimento 3. Numero de bloques agregados a la cadena por seg");
-        writer.println("100 Bloques creados y agregados en: " + timeTaked3 + " seg");
-        writer.println("Crear y agregar un bloque toma: " + timeTakedByTransaction3 + " seg");
-        writer.println("En un segundo, se crean y agregan: " + (1.0 / timeTakedByTransaction3) + " bloques");
-        writer.println("La cadena es válida: " + bc.validateChain());
-
-        writer.println("=============");
-
 
 
         writer.close();
