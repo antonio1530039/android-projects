@@ -16,13 +16,13 @@ public class Transaccion extends Transaction implements Serializable{
 
     Cartera from;
 
-    public Transaccion(Cartera from, PublicKey to, Boleto concept, int sequence) {
-        super(from.address, to, concept, sequence, from.privateKey);
+    public Transaccion(Cartera from, PublicKey to, Boleto concept, int sequence, String curve) {
+        super(from.address, to, concept, sequence, from.privateKey, curve);
         this.from = from;
     }
 
-    public Transaccion(Cartera from, PublicKey to, double concept, int sequence) {
-        super(from.address, to, concept, sequence, from.privateKey);
+    public Transaccion(Cartera from, PublicKey to, double concept, int sequence, String curve) {
+        super(from.address, to, concept, sequence, from.privateKey, curve);
         this.from = from;
     }
 
@@ -33,8 +33,8 @@ public class Transaccion extends Transaction implements Serializable{
      * @param concept
      * @param sequence 
      */
-    public Transaccion(PublicKey to, double concept, int sequence) {
-        super(to, concept, sequence);
+    public Transaccion(PublicKey to, double concept, int sequence, String curve) {
+        super(to, concept, sequence, curve);
         this.from = null;
     }
 

@@ -65,8 +65,6 @@ public class Transferencia extends Activity {
 
         cartera.setKeyPair(kp.getPublic(), kp.getPrivate());
 
-        //Instancia de API con dificultad
-        final API api = new API(0, Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/cinvescoin/blockchain.x", this);
 
 
 
@@ -91,6 +89,8 @@ public class Transferencia extends Activity {
                     ImageButton back = (ImageButton) d3.findViewById(R.id.pin_back_btn);
                     ImageButton confirm = (ImageButton) d3.findViewById(R.id.pin_confirm_btn);
 
+                    //Instancia de API con dificultad
+                    final API api = new API(0, Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/cinvescoin/blockchain.x", CX);
 
                     confirm.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -113,14 +113,14 @@ public class Transferencia extends Activity {
 
                                     }
                                     else{
-                                        Toast.makeText(getApplicationContext(), "No puedes realizarte una transacción a ti mismo", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(CX, "No puedes realizarte una transacción a ti mismo", Toast.LENGTH_SHORT).show();
                                         d3.dismiss();
                                     }
 
                                 }
 
                                 else{
-                                    Toast.makeText(getApplicationContext(), "No existe ningun usuario con esa dirección", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(CX, "No existe ningun usuario con esa dirección", Toast.LENGTH_LONG).show();
                                     d3.dismiss();
                                 }
 

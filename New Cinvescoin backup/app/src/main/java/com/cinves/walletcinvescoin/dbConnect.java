@@ -76,7 +76,7 @@ public class dbConnect extends SQLiteOpenHelper implements Serializable {
          * User 1
          */
         KeyPair kp;
-        DigitalSignature ds = new DigitalSignature();
+        DigitalSignature ds = new DigitalSignature("P-256");
         kp = ds.generateKeyPair();
         byte[] serialized = new byte[0];
         try {

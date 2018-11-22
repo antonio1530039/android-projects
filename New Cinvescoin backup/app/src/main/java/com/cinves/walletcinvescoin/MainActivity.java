@@ -144,11 +144,11 @@ public class MainActivity extends Activity {
         //Generate KeyPair for transaction
 
         KeyPair kp;
-        DigitalSignature ds = new DigitalSignature();
+        DigitalSignature ds = new DigitalSignature("P-224");
         kp = ds.generateKeyPair();
 
         long start = System.nanoTime();
-        Transaccion t = new Transaccion(kp.getPublic(), 100.0, 0);
+        Transaccion t = new Transaccion(kp.getPublic(), 100.0, 0, "P-224");
         t.processTransaction();
         //for (int i = 0; i < 100; i++) {
           //  Transaccion t = new Transaccion(kp.getPublic(), 100.0, i);
@@ -190,7 +190,7 @@ public class MainActivity extends Activity {
             KeyPair kpNew;
             kpNew = generateKeyPairForExperiment(curves.get(i));
             long start2 = System.nanoTime();
-            Transaccion tt = new Transaccion(kpNew.getPublic(), 100.0, 0);
+            Transaccion tt = new Transaccion(kpNew.getPublic(), 100.0, 0, curves.get(i));
             tt.processTransaction();
             //for (int j = 0; j < 100; j++) {
                 //Transaccion t = new Transaccion(kpNew.getPublic(), 100.0, i);
@@ -222,10 +222,10 @@ public class MainActivity extends Activity {
 
 
 
-                Block b = new Block(new Transaccion(kp.getPublic(), 100.0, 0), bc.getLashHashInChain() );
+                Block b = new Block(new Transaccion(kp.getPublic(), 100.0, 0, "P-224"), bc.getLashHashInChain() );
 
                 for(int j = 0; j < exp3[i]-1; j++){
-                    b.addTransaction(new Transaccion(kp.getPublic(), 100.0, j+1));
+                    b.addTransaction(new Transaccion(kp.getPublic(), 100.0, j+1, "P-224"));
                 }
                 long start3 = System.nanoTime();
                 b.mineBlock(0);

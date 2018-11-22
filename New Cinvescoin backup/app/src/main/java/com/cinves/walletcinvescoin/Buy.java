@@ -79,8 +79,6 @@ public class Buy extends Activity {
 
         cartera.setKeyPair(kp.getPublic(), kp.getPrivate());
 
-        //Instancia de API con dificultad
-        final com.cinves.walletcinvescoin.API api = new com.cinves.walletcinvescoin.API(0, Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/cinvescoin/blockchain.x", this);
 
         //Cargar boletos ///////////////////////////////////////////
 
@@ -131,8 +129,8 @@ public class Buy extends Activity {
                     final EditText pinControl = (EditText) d3.findViewById(R.id.pin_confirmacion);
                     ImageButton back = (ImageButton) d3.findViewById(R.id.pin_back_btn);
                     ImageButton confirm = (ImageButton) d3.findViewById(R.id.pin_confirm_btn);
-
-
+                    //Instancia de API con dificultad
+                    final com.cinves.walletcinvescoin.API api = new com.cinves.walletcinvescoin.API(0, Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/cinvescoin/blockchain.x", CX);
                     confirm.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
