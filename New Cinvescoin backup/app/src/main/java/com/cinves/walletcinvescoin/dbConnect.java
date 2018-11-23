@@ -21,6 +21,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.security.KeyPair;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,9 +76,13 @@ public class dbConnect extends SQLiteOpenHelper implements Serializable {
         /**
          * User 1
          */
-        KeyPair kp;
-        DigitalSignature ds = new DigitalSignature("P-256");
-        kp = ds.generateKeyPair();
+        KeyPair kp = null;
+        DigitalSignature ds = new DigitalSignature(112, "ECC");
+        try {
+            kp = ds.generateKeyPair();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        }
         byte[] serialized = new byte[0];
         try {
             serialized = this.serializeObjectForStorage(kp);
@@ -97,8 +102,12 @@ public class dbConnect extends SQLiteOpenHelper implements Serializable {
          * User 2
          */
 
-        KeyPair kp2;
-        kp2 = ds.generateKeyPair();
+        KeyPair kp2 = null;
+        try {
+            kp2 = ds.generateKeyPair();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        }
         byte[] serialized2 = new byte[0];
         try {
             serialized2 = this.serializeObjectForStorage(kp2);
@@ -119,8 +128,12 @@ public class dbConnect extends SQLiteOpenHelper implements Serializable {
          */
 
 
-        KeyPair kp3;
-        kp3 = ds.generateKeyPair();
+        KeyPair kp3 = null;
+        try {
+            kp3 = ds.generateKeyPair();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        }
         byte[] serialized3 = new byte[0];
         try {
             serialized3 = this.serializeObjectForStorage(kp3);

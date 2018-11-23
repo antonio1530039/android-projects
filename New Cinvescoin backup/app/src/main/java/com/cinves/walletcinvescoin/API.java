@@ -42,18 +42,22 @@ public class API extends AsyncTask<apiTransaction, Void, Boolean> implements Ser
     String ruta;
     Context CX;
     private ProgressDialog dialog;
+    public String algorithm;
+    public int securityLevel;
 
     /**
      * Constructor
      *
      * @param difficultyOfPow
      */
-    public API(int difficultyOfPow, String ruta, Context c) {
+    public API(int difficultyOfPow, String ruta, Context c, int securityLevel, String algorithm) {
         //Cargar cadena de bloques
         this.blockchain = Utilities.readMyBlockchain(ruta);
         this.ruta = ruta;
         if (this.blockchain == null) {
-            this.blockchain = new Blockchain(difficultyOfPow); //Instancia de la cadena de bloques
+            this.blockchain = new Blockchain(difficultyOfPow, securityLevel); //Instancia de la cadena de bloques
+            this.securityLevel = securityLevel;
+            this.algorithm = algorithm;
             this.saveChain();
         }
         this.CX = c;

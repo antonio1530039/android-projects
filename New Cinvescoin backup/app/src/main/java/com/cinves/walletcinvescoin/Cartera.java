@@ -25,10 +25,13 @@ import java.security.PublicKey;
 import java.security.Security;
 
 public class Cartera extends com.cinves.walletcinvescoin.MinerNode implements Serializable{
-    public String curve = "P-256";
+    public int secLevel;
+    public String algorithm;
     public int transaccionesRealizadas;
-    public Cartera() {
+    public Cartera(int secLevel, String algorithm) {
         super();
+        this.secLevel = secLevel;
+        this.algorithm = algorithm;
         this.transaccionesRealizadas = 0;
     }
 
@@ -53,7 +56,7 @@ public class Cartera extends com.cinves.walletcinvescoin.MinerNode implements Se
     public Transaccion makeTransfer(PublicKey address, double value){
         if(!Utilities.encode(address.getEncoded()).equals(Utilities.encode(this.address.getEncoded()))){
             this.transaccionesRealizadas++;
-            return new Transaccion(this, address, value, this.transaccionesRealizadas, curve);
+            return new Transaccion(this, address, value, this.transaccionesRealizadas, secLevel, algorithm);
         }else{
             return null;
         }
@@ -96,7 +99,7 @@ public class Cartera extends com.cinves.walletcinvescoin.MinerNode implements Se
 
     public Transaccion comprarBoleto(Boleto concept) {
         if(!Utilities.encode(concept.vendedor.getEncoded()).equals(Utilities.encode(this.address.getEncoded()))){
-            Transaccion t = new Transaccion(this, concept.vendedor, concept, this.transaccionesRealizadas, curve);
+            Transaccion t = new Transaccion(this, concept.vendedor, concept, this.transaccionesRealizadas, this.secLevel, this.algorithm);
             this.transaccionesRealizadas++;
             return t;
         }else{
@@ -107,7 +110,7 @@ public class Cartera extends com.cinves.walletcinvescoin.MinerNode implements Se
 
 
     public Transaccion getFirstIncentive(){
-        Transaccion t = new Transaccion(this.address, 500.00, this.transaccionesRealizadas, curve);
+        Transaccion t = new Transaccion(this.address, 500.00, this.transaccionesRealizadas, this.secLevel, this.algorithm);
         this.transaccionesRealizadas++;
         return t;
     }
@@ -116,12 +119,12 @@ public class Cartera extends com.cinves.walletcinvescoin.MinerNode implements Se
 
     @Override
     public Transaction rewardOfPow() {
-        return new Transaccion(this.address, 50.00, 0, curve);
+        return new Transaccion(this.address, 50.00, 0, this.secLevel, this.algorithm);
     }
 
     @Override
     public void createBlock(API api) {
-        Block block = new Block(); //crear bloque
+        Block block = new Block(api.securityLevel); //crear bloque
         //Agregar transacciones al bloque
         for (Transaction t : super.transactionsSaved) {
             block.addTransaction(t);

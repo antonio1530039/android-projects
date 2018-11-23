@@ -71,10 +71,11 @@ public class Historial extends Activity {
 
 
 
-
+        int secLevel = 112;
+        String algorithm = "ECC";
 
         //Instancia de API con dificultad
-        final com.cinves.walletcinvescoin.API api = new com.cinves.walletcinvescoin.API(0, Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/cinvescoin/blockchain.x", this);
+        final com.cinves.walletcinvescoin.API api = new com.cinves.walletcinvescoin.API(0, Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/cinvescoin/blockchain.x", this, secLevel, algorithm);
 
         //Leer la cadena de bloques
         Blockchain bc = api.blockchain;

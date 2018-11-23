@@ -70,13 +70,18 @@ public class Segunda extends Activity {
         //Asignar dirección pública al cuadro de texto
         address.setText(Utilities.encode(kp.getPublic().getEncoded()));
 
+        int secLevel = 112;
+        String algorithm = "ECC";
 
-        currentWallet = new Cartera();
+
+        currentWallet = new Cartera(secLevel, algorithm);
 
         currentWallet.setKeyPair(kp.getPublic(), kp.getPrivate());
 
+
+
         //Instancia de API con dificultad
-        final com.cinves.walletcinvescoin.API api = new com.cinves.walletcinvescoin.API(0, Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/cinvescoin/blockchain.x", this);
+        final com.cinves.walletcinvescoin.API api = new com.cinves.walletcinvescoin.API(0, Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/cinvescoin/blockchain.x", this, secLevel, algorithm);
 
         //Enviar incentivo
 

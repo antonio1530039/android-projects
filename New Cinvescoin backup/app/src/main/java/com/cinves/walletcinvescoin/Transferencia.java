@@ -61,7 +61,13 @@ public class Transferencia extends Activity {
         //Deserializacion de par de llaves
         final KeyPair kp = db.deserializeKeyPair(rawKp);
 
-        final Cartera cartera = new Cartera();
+
+        final int secLevel = 112;
+        final String algorithm = "ECC";
+
+
+
+        final Cartera cartera = new Cartera(secLevel, algorithm);
 
         cartera.setKeyPair(kp.getPublic(), kp.getPrivate());
 
@@ -89,13 +95,17 @@ public class Transferencia extends Activity {
                     ImageButton back = (ImageButton) d3.findViewById(R.id.pin_back_btn);
                     ImageButton confirm = (ImageButton) d3.findViewById(R.id.pin_confirm_btn);
 
+
+                    final String algorithm = "ECC";
+                    final int secLevel = 112;
+
                     //Instancia de API con dificultad
-                    final API api = new API(0, Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/cinvescoin/blockchain.x", CX);
+                    final API api = new API(0, Environment.getExternalStorageDirectory().getAbsolutePath().toString()+"/cinvescoin/blockchain.x", CX, secLevel, algorithm);
 
                     confirm.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Hash h = new Hash();
+                            Hash h = new Hash(secLevel);
 
                             if(h.getHexValue(pinControl.getText().toString()).equals(pin)){
 
