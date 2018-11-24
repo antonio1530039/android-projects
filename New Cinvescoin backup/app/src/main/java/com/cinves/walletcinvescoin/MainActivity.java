@@ -308,7 +308,7 @@ public class MainActivity extends Activity {
 
 
             ArrayList<Integer> secLevels = new ArrayList<>();
-
+            secLevels.add(112);
             secLevels.add(128);
             secLevels.add(192);
             secLevels.add(256);
