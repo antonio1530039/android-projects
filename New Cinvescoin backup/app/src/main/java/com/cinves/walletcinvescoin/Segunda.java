@@ -27,7 +27,7 @@ import amp_new.Security.Utilities;
 
 public class Segunda extends Activity {
 
-    ImageButton historial, copy, buy, transfer;
+    ImageButton historial, copy, buy, transfer, logout;
 
     EditText address;
     Button copiar;
@@ -45,6 +45,8 @@ public class Segunda extends Activity {
         historial = (ImageButton) findViewById(R.id.historia_btn);
         copy = (ImageButton) findViewById(R.id.copy_btn);
         transfer = (ImageButton) findViewById(R.id.transfer_btn);
+
+        logout = (ImageButton) findViewById(R.id.logout_btn);
 
         buy = (ImageButton) findViewById(R.id.buyBoleto_btn);
 
@@ -151,7 +153,12 @@ public class Segunda extends Activity {
         });
 
 
-
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
 

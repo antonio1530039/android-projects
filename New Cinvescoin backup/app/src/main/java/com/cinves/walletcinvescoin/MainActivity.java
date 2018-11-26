@@ -227,8 +227,7 @@ public class MainActivity extends Activity {
         }
 
 
-        public void performExperiment() {
-
+        public void writeExperiment(String text){
             try {
                 verifyPath();
             } catch (IOException e) {
@@ -242,32 +241,19 @@ public class MainActivity extends Activity {
                 writer = new PrintWriter(
                         Environment.getExternalStorageDirectory().getAbsolutePath().toString() + "/cinvescoin/experimento.txt"
                         , "UTF-8");
+                writer.println(text);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
+            writer.close();
+
+        }
 
 
-
-            //Experimento 1. Crear 100 transacciones y procesarlas
-            /*
-
-             */
-            //Medir tiempo
-
-
-            //Generate KeyPair for transaction
-
-            int d_securityLevel = 112;
-
-            ArrayList<String> algorithms = new ArrayList<>();
-            algorithms.add("ECC");
-            algorithms.add("RSA");
-            algorithms.add("DSA");
-
-
-
+        public String experiment_1(ArrayList<String> algorithms, int d_securityLevel){
+            String text = "";
             for(int i = 0; i < algorithms.size(); i++){
                 System.out.println("Realizando experimento: " + algorithms.get(i));
                 KeyPair kp = null;
@@ -285,35 +271,20 @@ public class MainActivity extends Activity {
 
                 double timeTaked = ((end - start) / 1000000.0) / 1000.0;
 
-                writer.println("=============");
-                writer.println("Experimento 1."+ (i+1)+" Algoritmo: " + algorithms.get(i) + " / Nivel de seguridad: 112-bits");
-                writer.println("Determinar el número de transacciones creadas y procesadas por segundo, para el nivel de seguridad.");
-
-                writer.println("-> El experimentó se realizó en: " + timeTaked + " seg");
-                writer.println("-> Número de transacciones por segundo: " + (1.0 / timeTaked) + " seg");
-                writer.println("=============");
+                text += "=============\n";
+                text += "Experimento 1."+ (i+1)+" Algoritmo: " + algorithms.get(i) + " / Nivel de seguridad: 112-bits\n";
+                text += "Determinar el número de transacciones creadas y procesadas por segundo, para el nivel de seguridad.\n";
+                text += "-> El experimentó se realizó en: " + timeTaked + " seg \n";
+                text += "-> Número de transacciones por segundo: " + (1.0 / timeTaked) + " seg\n";
+                text += "=============\n";
                 System.out.println("Termino experimento: " + algorithms.get(i));
             }
+            return text;
 
+        }
 
-
-
-
-
-
-            //Experimento 2
-            //Determinar el número de transacciones creadas y procesadas por segundo variando el nivel de seguridad y usando solamente el algoritmo ECC.
-
-
-
-
-            ArrayList<Integer> secLevels = new ArrayList<>();
-            secLevels.add(112);
-            secLevels.add(128);
-            secLevels.add(192);
-            secLevels.add(256);
-
-
+        public String experiment_2(ArrayList<Integer> secLevels){
+            String text = "";
             for (int i = 0; i < secLevels.size(); i++) {
                 DigitalSignature ds = new DigitalSignature(secLevels.get(i), "ECC");
                 KeyPair kpNew = null;
@@ -328,23 +299,20 @@ public class MainActivity extends Activity {
                 long end2 = System.nanoTime();
                 double timeTaked2 = ((end2 - start2) / 1000000.0) / 1000.0;
 
-                writer.println("=============");
-                writer.println("Experimento 2." + (i + 1) + ". Algoritmo ECC / Nivel de seguridad: " + secLevels.get(i));
-                writer.println("Una transacción toma: " + timeTaked2 + " seg");
-                writer.println("Número de transacciones por segundo: " + (1.0 / timeTaked2)+ " seg");
-                writer.println("=============");
+                text +="=============\n";
+                text += "Experimento 2." + (i + 1) + ". Algoritmo ECC / Nivel de seguridad: " + secLevels.get(i)+"\n";
+                text += "Una transacción toma: " + timeTaked2 + " seg\n";
+                text += "Número de transacciones por segundo: " + (1.0 / timeTaked2)+ " seg\n";
+                text+="=============\n";
 
 
             }
+            return text;
+        }
 
 
-
-
-            //Experimento 3.
-            //Determinar el número de bloques creados y agregados a la cadena de bloques por segundo,
-            // variando el nivel de seguridad y los tres algoritmos de firma.
-
-
+        public String experiment_3(ArrayList<Integer> secLevels, ArrayList<String> algorithms){
+            String text = "";
             for(int i =0; i < secLevels.size(); i++){
                 System.out.println("Ejecutando ns: " + secLevels.get(i));
 
@@ -366,12 +334,12 @@ public class MainActivity extends Activity {
                         bc.addBlock(b);
                         long end3 = System.nanoTime();
                         double timeTaked3 = ((end3 - start3) / 1000000.0) / 1000.0;
-                        writer.println("=============");
-                        writer.println("Experimento 3." + (i+1) + "."+(j+1)+". Algoritmo: " + algorithms.get(j)+ " / Nivel de seguridad" + secLevels.get(i));
-                        writer.println("Cada bloque toma: " + timeTaked3 + " seg");
-                        writer.println("En un segundo, se agregan: " + (1.0 / timeTaked3) + " bloques");
-                        writer.println("La cadena es válida: " + bc.validateChain());
-                        writer.println("=============");
+                        text += "=============\n";
+                        text += "Experimento 3." + (i+1) + "."+(j+1)+". Algoritmo: " + algorithms.get(j)+ " / Nivel de seguridad " + secLevels.get(i) + "\n";
+                        text += "Cada bloque toma: " + timeTaked3 + " seg\n";
+                        text += "En un segundo, se agregan: " + (1.0 / timeTaked3) + " bloques\n";
+                        text += "La cadena es válida: " + bc.validateChain()+"\n";
+                        text += "=============\n";
                         System.out.println("Termino exp para algoritmo: " + algorithms.get(j));
                     }else{
                         System.out.println("Se ignoro algoritmo DSA");
@@ -379,9 +347,61 @@ public class MainActivity extends Activity {
 
                 }
             }
+            return text;
+        }
 
 
-            writer.close();
+        public void performExperiment() {
+
+
+
+
+
+            //Experimento 1. Crear 100 transacciones y procesarlas
+            /*
+
+             */
+            //Medir tiempo
+
+
+            //Generate KeyPair for transaction
+
+            int d_securityLevel = 112;
+
+            ArrayList<String> algorithms = new ArrayList<>();
+            algorithms.add("ECC");
+            algorithms.add("RSA");
+            algorithms.add("DSA");
+
+            String text = experiment_1(algorithms, d_securityLevel);
+
+
+
+            //Experimento 2
+            //Determinar el número de transacciones creadas y procesadas por segundo variando el nivel de seguridad y usando solamente el algoritmo ECC.
+
+
+            ArrayList<Integer> secLevels = new ArrayList<>();
+            secLevels.add(112);
+            secLevels.add(128);
+            secLevels.add(192);
+            secLevels.add(256);
+
+            text += experiment_2(secLevels);
+
+
+            //Experimento 3.
+            //Determinar el número de bloques creados y agregados a la cadena de bloques por segundo,
+            // variando el nivel de seguridad y los tres algoritmos de firma.
+
+
+
+            text += experiment_3(secLevels, algorithms);
+
+            writeExperiment(text);
+            System.out.println("Done!");
+
+
 
 
         }
