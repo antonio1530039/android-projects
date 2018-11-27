@@ -26,6 +26,10 @@ public class Transaccion extends Transaction implements Serializable{
         this.from = from;
     }
 
+    public Transaccion(PublicKey to, double concept, int sequence, int securityLevel, String algorithm, PrivateKey signer) {
+        super(to, concept, sequence, securityLevel, algorithm, signer);
+    }
+
     
     /**
      * Constructor para dar transaccion como incentivo o regalo

@@ -20,6 +20,8 @@ import org.spongycastle.pqc.math.ntru.util.Util;
 import java.io.File;
 import java.io.IOException;
 import java.security.KeyPair;
+import java.security.Provider;
+import java.security.Security;
 
 import amp_new.AppInterface.API;
 import amp_new.Security.Hash;
@@ -161,7 +163,13 @@ public class Segunda extends Activity {
         });
 
 
-
+        System.out.println("Printing providers: ");
+        for (Provider provider: Security.getProviders()) {
+            System.out.println(provider.getName());
+            for (Provider.Service s: provider.getServices()){
+                    System.out.println("\t"+s.getType()+" "+ s.getAlgorithm());
+            }
+        }
 
     }
 

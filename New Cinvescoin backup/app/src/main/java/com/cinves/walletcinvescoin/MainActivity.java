@@ -38,6 +38,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Provider;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.text.ParseException;
@@ -133,13 +134,9 @@ public class MainActivity extends Activity {
             }
         });
 
+
+
     }
-
-
-
-
-
-
 
 
     private void askPermissionOnly() {
@@ -264,18 +261,28 @@ public class MainActivity extends Activity {
                     e.printStackTrace();
                 }
 
-                long start = System.nanoTime();
-                Transaccion t = new Transaccion(kp.getPublic(), 100.0, 0, d_securityLevel, algorithms.get(i));
-                t.processTransaction();
-                long end = System.nanoTime();
+                ArrayList<Double> times = new ArrayList<>();
+                double prom = 0.0;
+                //Procesar transacciones 31 veces y obtener promedio de tiempo
+                for(int k=0; k < 31; k++){
 
-                double timeTaked = ((end - start) / 1000000.0) / 1000.0;
+                    long start = System.nanoTime();
 
+                    for(int z=0; z< 1000; z++){
+                        Transaccion t = new Transaccion(kp.getPublic(), 100.0, 0, d_securityLevel, algorithms.get(i), kp.getPrivate());
+                        t.processTransaction();
+                    }
+                    long end = System.nanoTime();
+                    double timeTaked = ((end - start) / 1000000.0) / 1000.0;
+                    prom += (1.0/ (timeTaked / 1000.0));
+                    times.add((1.0/(timeTaked / 1000.0)));
+                }
+                prom /= 31;
                 text += "=============\n";
                 text += "Experimento 1."+ (i+1)+" Algoritmo: " + algorithms.get(i) + " / Nivel de seguridad: 112-bits\n";
                 text += "Determinar el número de transacciones creadas y procesadas por segundo, para el nivel de seguridad.\n";
-                text += "-> El experimentó se realizó en: " + timeTaked + " seg \n";
-                text += "-> Número de transacciones por segundo: " + (1.0 / timeTaked) + " seg\n";
+                //text += "-> El experimentó se realizó en: " + timeTaked + " seg \n";
+                text += "-> Número de transacciones por segundo: " + prom + " seg\n";
                 text += "=============\n";
                 System.out.println("Termino experimento: " + algorithms.get(i));
             }
@@ -294,7 +301,7 @@ public class MainActivity extends Activity {
                     e.printStackTrace();
                 }
                 long start2 = System.nanoTime();
-                Transaccion tt = new Transaccion(kpNew.getPublic(), 100.0, 0, secLevels.get(i), "ECC");
+                Transaccion tt = new Transaccion(kpNew.getPublic(), 100.0, 0, secLevels.get(i), "ECC", kpNew.getPrivate());
                 tt.processTransaction();
                 long end2 = System.nanoTime();
                 double timeTaked2 = ((end2 - start2) / 1000000.0) / 1000.0;
@@ -327,9 +334,10 @@ public class MainActivity extends Activity {
                         } catch (NoSuchProviderException e) {
                             e.printStackTrace();
                         }
+
                         long start3 = System.nanoTime();
                         //Instancia del bloque con una transaccion agregada
-                        Block b = new Block(new Transaccion(kpNew.getPublic(), 100.0, 0, secLevels.get(i), algorithms.get(j)), bc.getLashHashInChain(), secLevels.get(i) );
+                        Block b = new Block(new Transaccion(kpNew.getPublic(), 100.0, 0, secLevels.get(i), algorithms.get(j), kpNew.getPrivate()), bc.getLashHashInChain(), secLevels.get(i) );
                         b.mineBlock(0);
                         bc.addBlock(b);
                         long end3 = System.nanoTime();
