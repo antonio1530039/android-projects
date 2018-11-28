@@ -262,26 +262,33 @@ public class MainActivity extends Activity {
                 }
 
                 ArrayList<Double> times = new ArrayList<>();
+                ArrayList<Double> timesTaked = new ArrayList<>();
                 double prom = 0.0;
+                double timeProm = 0.0;
                 //Procesar transacciones 31 veces y obtener promedio de tiempo
                 for(int k=0; k < 31; k++){
                     long start = System.nanoTime();
-                    for(int z=0; z< 100; z++){
+                    for(int z=0; z< 5; z++){
                         Transaccion t = new Transaccion(kp.getPublic(), 100.0, 0, d_securityLevel, algorithms.get(i), kp.getPrivate());
                         t.processTransaction();
                     }
                     long end = System.nanoTime();
                     double timeTaked = ((end - start) / 1000000.0) / 1000.0;
-                    prom += (1.0/ (timeTaked / 100.0));
-                    times.add((1.0/(timeTaked / 100.0)));
+                    prom += (1.0/ (timeTaked / 5.0));
+                    timeProm += (timeTaked/5.0);
+                    timesTaked.add((timeTaked/5.0));
+                    times.add((1.0/(timeTaked / 5.0)));
                 }
                 prom /= 31.0;
+                timeProm /= 31.0;
                 text += "=============\n";
                 text += "Experimento 1."+ (i+1)+" Algoritmo: " + algorithms.get(i) + " / Nivel de seguridad: 112-bits\n";
                 text += "Determinar el número de transacciones creadas y procesadas por segundo, para el nivel de seguridad.\n";
                 //text += "-> El experimentó se realizó en: " + timeTaked + " seg \n";
-                text += "-> Número de transacciones por segundo: " + prom + " seg\n";
+                text += "-> Número de TPS promedio: " + prom + "\n";
+                text += "Tiempo promedio tomado por transaccion: " + timeProm + "\n";
                 text += "Valores de TPS: " + times.toString() + "\n";
+                text += "Valores de tiempos tomados: " + timesTaked.toString() + "\n";
                 text += "=============\n";
                 System.out.println("Termino experimento: " + algorithms.get(i));
             }
@@ -307,20 +314,25 @@ public class MainActivity extends Activity {
                  *
                  */
                 ArrayList<Double> times = new ArrayList<>();
+                ArrayList<Double> timesTaked = new ArrayList<>();
                 double prom = 0.0;
+                double timeProm = 0.0;
                 //Procesar transacciones 31 veces y obtener promedio de tiempo
                 for(int k=0; k < 31; k++){
                     long start = System.nanoTime();
-                    for(int z=0; z< 100; z++){
+                    for(int z=0; z< 5; z++){
                         Transaccion t = new Transaccion(kpNew.getPublic(), 100.0, 0, secLevels.get(i), "ECC", kpNew.getPrivate());
                         t.processTransaction();
                     }
                     long end = System.nanoTime();
                     double timeTaked = ((end - start) / 1000000.0) / 1000.0;
-                    prom += (1.0/ (timeTaked / 100.0));
-                    times.add((1.0/(timeTaked / 100.0)));
+                    prom += (1.0/ (timeTaked / 5.0));
+                    timeProm += (timeTaked/5.0);
+                    times.add((1.0/(timeTaked / 5.0)));
+                    timesTaked.add((timeTaked/5.0));
                 }
                 prom /= 31.0;
+                timeProm /= 31.0;
                 /**
                  *
                  */
@@ -337,8 +349,10 @@ public class MainActivity extends Activity {
                 text +="=============\n";
                 text += "Experimento 2." + (i + 1) + ". Algoritmo ECC / Nivel de seguridad: " + secLevels.get(i)+"\n";
                 //text += "Una transacción toma: " + timeTaked2 + " seg\n";
-                text += "Número de transacciones por segundo: " + prom + "\n";
+                text += "Número de TPS promedio: " + prom + "\n";
+                text += "Tiempo promedio tomado por transaccion: " + timeProm + "\n";
                 text += "Valores de TPS: " + times.toString() + "\n";
+                text += "Valores de tiempos tomados: " + timesTaked.toString() + "\n";
                 text+="=============\n";
 
 
@@ -371,23 +385,28 @@ public class MainActivity extends Activity {
                          *
                          */
                         ArrayList<Double> times = new ArrayList<>();
+                        ArrayList<Double> timesTaked = new ArrayList<>();
                         double prom = 0.0;
+                        double timeProm = 0.0;
                         //Procesar transacciones 31 veces y obtener promedio de tiempo
                         for(int k=0; k < 31; k++){
                             Blockchain bc = new Blockchain(0, secLevels.get(i));
                             long start = System.nanoTime();
-                            for(int z=0; z< 100; z++){
+                            for(int z=0; z< 5; z++){
                                 Block b = new Block(new Transaccion(kpNew.getPublic(), 100.0, 0, secLevels.get(i), algorithms.get(j), kpNew.getPrivate()), bc.getLashHashInChain(), secLevels.get(i) );
                                 b.mineBlock(0);
                                 bc.addBlock(b);
                             }
                             long end = System.nanoTime();
                             double timeTaked = ((end - start) / 1000000.0) / 1000.0;
-                            prom += (1.0/ (timeTaked / 100.0));
-                            times.add((1.0/(timeTaked / 100.0)));
+                            prom += (1.0/ (timeTaked / 5.0));
+                            timeProm += (timeTaked/5.0);
+                            times.add((1.0/(timeTaked / 5.0)));
+                            timesTaked.add((timeTaked/5.0));
                             System.out.println("Cadena válida? " + bc.validateChain());
                         }
                         prom /= 31.0;
+                        timeProm /= 31.0;
                         /**
                          *
                          */
@@ -410,8 +429,10 @@ public class MainActivity extends Activity {
                         text += "=============\n";
                         text += "Experimento 3." + (i+1) + "."+(j+1)+". Algoritmo: " + algorithms.get(j)+ " / Nivel de seguridad " + secLevels.get(i) + "\n";
                         // text += "Cada bloque toma: " + timeTaked3 + " seg\n";
-                        text += "En un segundo, se agregan: " + prom + " bloques\n";
+                        text += "Número de BPS: " + prom + "\n";
+                        text += "Tiempo promedio tomado por bloque: " + timeProm + "\n";
                         text += "Valores de BPS: " + times.toString() + "\n";
+                        text += "Valores de tiemops tomados: " + timesTaked.toString() + "\n";
                         //text += "La cadena es válida: " + bc.validateChain()+"\n";
                         text += "=============\n";
                         System.out.println("Termino exp para algoritmo: " + algorithms.get(j));
