@@ -265,27 +265,27 @@ public class MainActivity extends Activity {
                 double prom = 0.0;
                 //Procesar transacciones 31 veces y obtener promedio de tiempo
                 for(int k=0; k < 31; k++){
-
                     long start = System.nanoTime();
-
-                    for(int z=0; z< 1000; z++){
+                    for(int z=0; z< 100; z++){
                         Transaccion t = new Transaccion(kp.getPublic(), 100.0, 0, d_securityLevel, algorithms.get(i), kp.getPrivate());
                         t.processTransaction();
                     }
                     long end = System.nanoTime();
                     double timeTaked = ((end - start) / 1000000.0) / 1000.0;
-                    prom += (1.0/ (timeTaked / 1000.0));
-                    times.add((1.0/(timeTaked / 1000.0)));
+                    prom += (1.0/ (timeTaked / 100.0));
+                    times.add((1.0/(timeTaked / 100.0)));
                 }
-                prom /= 31;
+                prom /= 31.0;
                 text += "=============\n";
                 text += "Experimento 1."+ (i+1)+" Algoritmo: " + algorithms.get(i) + " / Nivel de seguridad: 112-bits\n";
                 text += "Determinar el número de transacciones creadas y procesadas por segundo, para el nivel de seguridad.\n";
                 //text += "-> El experimentó se realizó en: " + timeTaked + " seg \n";
                 text += "-> Número de transacciones por segundo: " + prom + " seg\n";
+                text += "Valores de TPS: " + times.toString() + "\n";
                 text += "=============\n";
                 System.out.println("Termino experimento: " + algorithms.get(i));
             }
+            System.out.println(text);
             return text;
 
         }
@@ -300,20 +300,50 @@ public class MainActivity extends Activity {
                 } catch (NoSuchProviderException e) {
                     e.printStackTrace();
                 }
-                long start2 = System.nanoTime();
-                Transaccion tt = new Transaccion(kpNew.getPublic(), 100.0, 0, secLevels.get(i), "ECC", kpNew.getPrivate());
-                tt.processTransaction();
-                long end2 = System.nanoTime();
-                double timeTaked2 = ((end2 - start2) / 1000000.0) / 1000.0;
+
+
+
+                /**
+                 *
+                 */
+                ArrayList<Double> times = new ArrayList<>();
+                double prom = 0.0;
+                //Procesar transacciones 31 veces y obtener promedio de tiempo
+                for(int k=0; k < 31; k++){
+                    long start = System.nanoTime();
+                    for(int z=0; z< 100; z++){
+                        Transaccion t = new Transaccion(kpNew.getPublic(), 100.0, 0, secLevels.get(i), "ECC", kpNew.getPrivate());
+                        t.processTransaction();
+                    }
+                    long end = System.nanoTime();
+                    double timeTaked = ((end - start) / 1000000.0) / 1000.0;
+                    prom += (1.0/ (timeTaked / 100.0));
+                    times.add((1.0/(timeTaked / 100.0)));
+                }
+                prom /= 31.0;
+                /**
+                 *
+                 */
+
+
+                //long start2 = System.nanoTime();
+                // Transaccion tt = new Transaccion(kpNew.getPublic(), 100.0, 0, secLevels.get(i), "ECC", kpNew.getPrivate());
+                // tt.processTransaction();
+                // long end2 = System.nanoTime();
+                // System.out.println("============================== Llave Experimento 2, algoritmo: ECC "+secLevels.get(i)+"-bits\n" + Utilities.toHexadecimal(kpNew.getPublic().getEncoded()));
+                //// System.out.println("Key length: "+getKeyLength(kpNew.getPublic()));
+                // double timeTaked2 = ((end2 - start2) / 1000000.0) / 1000.0;
 
                 text +="=============\n";
                 text += "Experimento 2." + (i + 1) + ". Algoritmo ECC / Nivel de seguridad: " + secLevels.get(i)+"\n";
-                text += "Una transacción toma: " + timeTaked2 + " seg\n";
-                text += "Número de transacciones por segundo: " + (1.0 / timeTaked2)+ " seg\n";
+                //text += "Una transacción toma: " + timeTaked2 + " seg\n";
+                text += "Número de transacciones por segundo: " + prom + "\n";
+                text += "Valores de TPS: " + times.toString() + "\n";
                 text+="=============\n";
 
 
             }
+            System.out.println(text);
             return text;
         }
 
@@ -326,7 +356,7 @@ public class MainActivity extends Activity {
                 for(int j = 0; j < algorithms.size(); j++){
 
                     if( !(algorithms.get(j).equals("DSA") && secLevels.get(i) > 128)){
-                        Blockchain bc = new Blockchain(0, secLevels.get(i));
+
                         DigitalSignature ds = new DigitalSignature(secLevels.get(i), algorithms.get(j));
                         KeyPair kpNew = null;
                         try {
@@ -335,18 +365,54 @@ public class MainActivity extends Activity {
                             e.printStackTrace();
                         }
 
-                        long start3 = System.nanoTime();
+
+
+                        /**
+                         *
+                         */
+                        ArrayList<Double> times = new ArrayList<>();
+                        double prom = 0.0;
+                        //Procesar transacciones 31 veces y obtener promedio de tiempo
+                        for(int k=0; k < 31; k++){
+                            Blockchain bc = new Blockchain(0, secLevels.get(i));
+                            long start = System.nanoTime();
+                            for(int z=0; z< 100; z++){
+                                Block b = new Block(new Transaccion(kpNew.getPublic(), 100.0, 0, secLevels.get(i), algorithms.get(j), kpNew.getPrivate()), bc.getLashHashInChain(), secLevels.get(i) );
+                                b.mineBlock(0);
+                                bc.addBlock(b);
+                            }
+                            long end = System.nanoTime();
+                            double timeTaked = ((end - start) / 1000000.0) / 1000.0;
+                            prom += (1.0/ (timeTaked / 100.0));
+                            times.add((1.0/(timeTaked / 100.0)));
+                            System.out.println("Cadena válida? " + bc.validateChain());
+                        }
+                        prom /= 31.0;
+                        /**
+                         *
+                         */
+
+
+
+
+
                         //Instancia del bloque con una transaccion agregada
-                        Block b = new Block(new Transaccion(kpNew.getPublic(), 100.0, 0, secLevels.get(i), algorithms.get(j), kpNew.getPrivate()), bc.getLashHashInChain(), secLevels.get(i) );
-                        b.mineBlock(0);
-                        bc.addBlock(b);
-                        long end3 = System.nanoTime();
-                        double timeTaked3 = ((end3 - start3) / 1000000.0) / 1000.0;
+                        // Transaccion t = new Transaccion(kpNew.getPublic(), 100.0, 0, secLevels.get(i), algorithms.get(j), kpNew.getPrivate());
+                        //t.processTransaction();
+                        //System.out.println("============================== Llave Experimento 3, algoritmo: "+algorithms.get(j)+" Nivel:"+secLevels.get(i)+"-bits\n " + Utilities.toHexadecimal(kpNew.getPublic().getEncoded()));
+                        //System.out.println("Key length: "+getKeyLength(kpNew.getPublic()));
+                        //long start3 = System.nanoTime();
+                        //  Block b = new Block(t, bc.getLashHashInChain(), secLevels.get(i) );
+                        //  b.mineBlock(0);
+                        // bc.addBlock(b);
+                        //long end3 = System.nanoTime();
+                        //double timeTaked3 = ((end3 - start3) / 1000000.0) / 1000.0;
                         text += "=============\n";
                         text += "Experimento 3." + (i+1) + "."+(j+1)+". Algoritmo: " + algorithms.get(j)+ " / Nivel de seguridad " + secLevels.get(i) + "\n";
-                        text += "Cada bloque toma: " + timeTaked3 + " seg\n";
-                        text += "En un segundo, se agregan: " + (1.0 / timeTaked3) + " bloques\n";
-                        text += "La cadena es válida: " + bc.validateChain()+"\n";
+                        // text += "Cada bloque toma: " + timeTaked3 + " seg\n";
+                        text += "En un segundo, se agregan: " + prom + " bloques\n";
+                        text += "Valores de BPS: " + times.toString() + "\n";
+                        //text += "La cadena es válida: " + bc.validateChain()+"\n";
                         text += "=============\n";
                         System.out.println("Termino exp para algoritmo: " + algorithms.get(j));
                     }else{
@@ -355,6 +421,7 @@ public class MainActivity extends Activity {
 
                 }
             }
+            System.out.println(text);
             return text;
         }
 

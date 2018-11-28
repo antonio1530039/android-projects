@@ -124,7 +124,7 @@ public class Cartera extends com.cinves.walletcinvescoin.MinerNode implements Se
 
     @Override
     public void createBlock(API api) {
-        Block block = new Block(api.securityLevel); //crear bloque
+        Block block = new Block(112); //crear bloque
         //Agregar transacciones al bloque
         for (Transaction t : super.transactionsSaved) {
             block.addTransaction(t);
