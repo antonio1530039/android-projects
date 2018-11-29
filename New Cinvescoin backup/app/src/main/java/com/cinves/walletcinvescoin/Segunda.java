@@ -163,13 +163,6 @@ public class Segunda extends Activity {
         });
 
 
-        System.out.println("Printing providers: ");
-        for (Provider provider: Security.getProviders()) {
-            System.out.println(provider.getName());
-            for (Provider.Service s: provider.getServices()){
-                    System.out.println("\t"+s.getType()+" "+ s.getAlgorithm());
-            }
-        }
 
     }
 
